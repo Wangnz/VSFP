@@ -1,11 +1,49 @@
 body {
-	display: block;
+	height: 100vh;
 }
 
-#div1, #div2 {
-	margin: 50px 0;
+.menu_bar {
+	height: 5vh;
 }
 
-#incomeSelect2, #countrySelect {
-	font-size: 72px;
+.menu_bar-left, .menu_bar-right {
+	display: inline-block;
+	width: 48vw;
+	text-align: center;
+}
+
+.div-top, .div-bottom {
+	height: 45vh;
+	text-align: center;
+}
+
+.div-lineChart-plot {
+	height: 80%;
+}
+
+.div-dashboard {
+	position: absolute;
+	bottom: 0;
+	right: 15%;
+	left: 15%;
+	height: 20%;
+}
+
+.svg-container {
+	border: 1px #cccccc solid;
+	display: inline-block;
+	position: relative;
+	width: 48%;
+	height: 100%;
+	padding-bottom: 0;
+	vertical-align: top;
+	overflow: hidden;
+	margin: 0 10px;
+}
+
+.svg-content-responsive {
+	display: inline-block;
+	position: absolute;
+	padding-top: 25px;
+	left: 0;
 }

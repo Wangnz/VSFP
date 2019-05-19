@@ -10,12 +10,12 @@ class ParCoorPlot {
 
 		this.color = d3.scaleSequential()
 		  .interpolator(d3.interpolateViridis)
-		  .domain([0,60]);
+		  .domain([0, 60]);
 
-		this.x_leftBound = WIDTH * 0.0;
-		this.x_rightBound = WIDTH * 1.0;
+		this.x_leftBound = WIDTH * 0.05;
+		this.x_rightBound = WIDTH * 0.9;
 		this.y_upBound = 0;
-		this.y_bottomBound = HEIGHT*2/3;
+		this.y_bottomBound = HEIGHT*0.8;
 	}
 
 	update_data(input_data, income, country, features) {
@@ -48,7 +48,7 @@ class ParCoorPlot {
 		
 		this.xscale = d3.scalePoint()
 		  .range([this.x_leftBound, this.x_rightBound])
-		  .padding(1)
+		  .padding(0.4)
 		  .domain(dimensions);
 
 		this.yscales = {};
@@ -94,7 +94,7 @@ class ParCoorPlot {
 		  .append("path")
 		  .attr("class", "path")
 		  .attr("d", path)
-		  .attr("transform", "translate(0, 100)")
+		  .attr("transform", "translate(0," + HEIGHT*0.4 + ")")
 		  .style("fill", "none")
 		  .style("stroke", function(d, i) {return _this.color(i); })
 		  .style("stroke-width", "1")
@@ -104,19 +104,23 @@ class ParCoorPlot {
 	  	subsvg.selectAll(".axis")
 	  	  .data(dimensions).enter()
 	  	  .append("g")
-	  	  .attr("transform", function(d) {return "translate(" + _this.xscale(d) + ", 100)"; })
+	  	  .attr("transform", function(d) {return "translate(" + _this.xscale(d) + "," + HEIGHT*0.4 + ")"; })
 	  	  .each(function(d) {d3.select(this).call(d3.axisLeft().tickFormat(d3.format(".4")).scale(_this.yscales[d])); })
 	  	  .append("text")
 	  	  .style("text-anchor", "start")
 	  	  .text(function(d) {return encode2Name(d); })
 	  	  .attr("transform", "rotate(-40)")
 	  	  .attr("y", -9)
+	  	  .attr("font-size", 8)
 	  	  .style("fill", "black");
 
+	  	/*
 	  	subsvg.append("text")
 	  	  .style("text-anchor", "middle")
-	  	  .attr("transform", "translate(" + (WIDTH/2) + "," + (HEIGHT+10) + ")")
-	  	  .text(this.income + ", " + this.country);
+	  	  .attr("transform", "translate(" + (WIDTH/2) + "," + (HEIGHT) + ")")
+	  	  .text(this.income + ", " + this.country)
+	  	  .attr("font-size", "12");
+		*/
 	}
 
 	linking(start_year, end_year) {
@@ -152,7 +156,7 @@ class ParCoorPlot {
 		  .append("path")
 		  .attr("d", path)
 		  .attr("class", "brush_path")
-		  .attr("transform", "translate(0, 100)")
+		  .attr("transform", "translate(0," + HEIGHT*0.4 + ")")
 		  .style("fill", "none")
 		  .style("stroke", function(d, i) {return _this.color(i + (start_year - 1960)); })
 		  .style("stroke-width", "1")

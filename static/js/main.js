@@ -1,34 +1,20 @@
 console.log(data);
 
 function keyMapping(topic) {
-	/*
-	Economy:
-		NY.GDP.MKTP.CD: GDP
-		NY.GNP.MKTP.CD: GNI
-
-	Population:
-		SP.POP.TOTL: total population number
-		SP.DYN.CBRT.IN: birth rate
-		SP.DYN.LE00.IN: life expectancy
-		SM.POP.TOTL: international migrant
-		SP.DYN.CDRT.IN: death rate
-	Energy:
-		EN.ATM.NOXE.KT.CE: NO2 emission
-		EN.ATM.CO2E.KT: CO2 emission
-		EG.USE.COMM.CL.ZS: alternative energy %
-	Employment:
-		SL.TLF.CACT.NE.ZS: labor force participation rate
-		SL.UEM.TOTL.NE.ZS: Unemployment %
-
-	*/
 	if (topic == "economy") {
 		return {
-		"gdp": "NY.GDP.PCAP.CD",
-		"gdp_per_capita": "'NY.GDP.MKTP.CD",
-		"gni": "NY.GNP.PCAP.CD"};
+			"gdp": "NY.GDP.PCAP.CD",
+			"gdp_per_capita": "NY.GDP.MKTP.CD",
+			"gni": "NY.GNP.PCAP.CD"};
 	}
 	else if (topic == "population") {
-		return {"population": "SP.POP.TOTL", "birth_rate": "SP.DYN.CBRT.IN", "life_expectancy": "SP.DYN.LE00.IN", "migrant": "SM.POP.TOTL", "death_rate": "SP.DYN.CDRT.IN", "SP.POP.GROW": "population_growth"}
+		return {
+			"population": "SP.POP.TOTL",
+			"birth_rate": "SP.DYN.CBRT.IN",
+			"life_expectancy": "SP.DYN.LE00.IN",
+			"migrant": "SM.POP.TOTL",
+			"death_rate": "SP.DYN.CDRT.IN",
+			"population_growth": "SP.POP.GROW"}
 	}
 	else if (topic == "energy") {
 		return {
@@ -39,16 +25,13 @@ function keyMapping(topic) {
 			"co2_bldg": "EN.CO2.BLDG.ZS",
 			"alternative": "EG.USE.COMM.CL.ZS"}
 	}
-	/*
-	else if (topic == "employment") {
-		return {"lfpr": "SL.TLF.CACT.NE.ZS", "unemployment": "SL.UEM.TOTL.NE.ZS"}
-	} */
 	else if (topic == "education") {
 		return {
-			"edu_expend": "NY.ADJ.AEDU.CD",
-			"edu_bachelor": "SE.TER.CUAT.BA.ZS",
-			"labor_force_advanced": "SL.TLF.ADVN.ZS",
-			"labor_force_basic": "SL.TLF.BASC.MA.ZS"
+			"gov_expenditure": "SE.XPD.TOTL.GD.ZS",
+			"enroll_preprimary": "SE.PRE.ENRR",
+			"enroll_primary": "SE.PRM.NENR",
+			"enroll_secondary": "SE.SEC.ENRR",
+			"enroll_tertiary": "SE.TER.ENRR"
 		}
 	}
 }
@@ -72,7 +55,7 @@ function showPlot (line_chart, par_coor_plot) {
 		if (topic == "economy") subtopic = "gdp";
 		else if (topic == "energy") subtopic = "co2_emission";
 		else if (topic == "population") subtopic = "population";
-		else if (topic == "education") subtopic = "edu_expend";
+		else if (topic == "education") subtopic = "gov_expenditure";
 		updatePlot(topic, subtopic, income, status);
 	});
 
@@ -153,13 +136,8 @@ function showPlot (line_chart, par_coor_plot) {
 		else if (feature_topic == 'population') {
 			features = features.concat(["SP.DYN.LE00.IN", "SP.POP.GROW", "SP.DYN.CBRT.IN", "SP.DYN.CDRT.IN"]);
 		}
-		/*
-		else if (feature_topic == 'employment') {
-			features += [];
-		}
-		*/
 		else if (feature_topic == 'education') {
-			features = features.concat(["NY.ADJ.AEDU.CD", "SE.XPD.TOTL.GD.ZS", "SE.TER.CUAT.BA.ZS", "SL.TLF.ADVN.ZS", "SL.TLF.BASC.MA.ZS"]);
+			features = features.concat(['SE.PRE.ENRR', 'SE.PRM.NENR', 'SE.SEC.ENRR', 'SE.TER.ENRR', 'SE.XPD.TOTL.GD.ZS']);
 		}
 		par_coor_plot.update_data(data[income], income, country, features);
 		par_coor_plot.make_plot();
@@ -170,22 +148,21 @@ function showPlot (line_chart, par_coor_plot) {
 
 
 var margin = {top:50, right: 50, bottom: 100, left: 50};
-var WIDTH = 1000 - margin.left - margin.right;
-var HEIGHT = 500 - margin.top - margin.bottom;
+var WIDTH = document.documentElement.clientWidth / 2;// - margin.left - margin.right;
+var HEIGHT = document.documentElement.clientHeight / 2 - margin.top - margin.bottom;
 
-var svgContainer = d3.select("#div1").attr("class", "svg-container");
+var svgContainer = d3.select(".div-lineChart").attr("class", "svg-container");
 var svg = svgContainer.append("svg")
   .attr("preserveAspectRatio", "xMinYMin meet")
-  .attr("viewBox", "0 0 " + WIDTH + " " + (HEIGHT+100))
+  .attr("viewBox", "0 0 " + WIDTH + " " + (HEIGHT))
   .attr("class", "svg-content-responsive")
-  .attr("id", "svg-content-responsive")
-  .attr("width", "100%")
-  .attr("height", "100%");
+  //.attr("width", "100%")
+  //.attr("height", "100%");
 
-var svgContainer2 = d3.select("#div2").attr("class", "svg-container");
+var svgContainer2 = d3.select(".div-parCoorPlot").attr("class", "svg-container");
 var svg2 = svgContainer2.append("svg")
   .attr("preserveAspectRatio", "xMinYMin meet")
-  .attr("viewBox", "0 -10" + " " + WIDTH + " " + (HEIGHT+50))
+  //.attr("viewBox", "0 0" + " " + WIDTH + " " + (HEIGHT*2))
   .attr("class", "svg-content-responsive")
   .attr("width", "100%")
   .attr("height", "100%");

@@ -33,6 +33,8 @@ function encode2Name(encode) {
 			return "Life Expectancy (years)";
 		case "SM.POP.TOTL":
 			return "Migrant";
+		case "SP.POP.GROW":
+			return "Population growth (%)"
 		case "SP.DYN.CDRT.IN":
 			return "Death Rate (%)";
  
@@ -48,16 +50,18 @@ function encode2Name(encode) {
 		case "EN.CO2.BLDG.ZS":
 			return "CO2 (commercial bldg.)"
 		case "EG.USE.COMM.CL.ZS":
-			return "Alternative Energy (%)";
+			return "Alter. Energy (%)";
 
-		// employment
-		/*
-		case "SL.TLF.CACT.NE.ZS":
-			return "Labor Force Par. Rate (%)";
-		case "SL.UEM.TOTL.NE.ZS":
-			return "Unemployment (%)";
-		case "SP.POP.GROW":
-			return "Population Growth (%)";
-		*/
+		// edu
+		case "SE.PRE.ENRR":
+			return "Enrollment (preprimary) (%)";
+		case "SE.PRM.NENR":
+			return "Enrollment (primary) (%)";
+		case "SE.SEC.ENRR":
+			return "Enrollment (secondary) (%)";
+		case "SE.TER.ENRR":
+			return "Enrollment (tertiary) (%)";
+		case "SE.XPD.TOTL.GD.ZS":
+			return "Gov. expenditure (% of GDP)";
 	}
 }

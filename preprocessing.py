@@ -12,6 +12,14 @@ ROI = [
 		#'NY.ADJ.AEDU.CD', 'SE.XPD.TOTL.GD.ZS', 'SE.TER.CUAT.BA.ZS', 'SL.TLF.ADVN.ZS', 'SL.TLF.BASC.MA.ZS',
 		'SE.PRE.ENRR', 'SE.PRM.NENR', 'SE.SEC.ENRR', 'SE.TER.ENRR', 'SE.XPD.TOTL.GD.ZS'
 	]
+'''
+After changing the features, you also have to change ...
+
+1. main.js/keyMapping()
+2. main.js/updateParColPlot()
+3. util.js/encode2Name()
+'''
+
 
 ROI_set = set(ROI)
 
