@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  	<script src="https://unpkg.com/d3-simple-slider"></script>
+  	<script src="//d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
+  	<script src="{{ url_for('static', filename='js/util.js') }}"></script>
+  	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
+</head>
+</head>
+
+<body>
+	<script>var data = {{ data.data | safe }};</script>
+
+	<div id="div1">
+		<select name="topic" id="topicSelect">
+			<option value="economy">economy</option>
+			<option value="energy">energy</option>
+			<option value="population">population</option>
+			<option value="education">education</option>
+		</select>
+
+		<select name='subtopic' id='subtopicSelect'>
+			<option value="gdp">GDP per capita</option>
+			<option value="gni">GNI per capita</option>
+		</select>
+
+		<select name='incomeType' id='incomeSelect'>
+			<option value="high-income">High income</option>
+			<option value="middle-income">Middle income</option>
+			<option value="low-income">Low income</option>
+		</select>
+
+		<input class="plotType" name="typeButton", type="button" value="Line Chart" disabled>
+		<input class="plotType" name="typeButton", type="button" value="Bar Chart">
+		<input class="plotType" name="typeButton", type="button" value="Pie Chart">
+
+		<script>
+			$(document).ready(function () {
+				$('#topicSelect').change(function() {
+					var val = $(this).val();
+					if (val == "economy") {
+						$("#subtopicSelect").html(" \
+							<option value='gdp' selected='selected'>GDP per capita</option> \
+							<option value='gni'>GNI per capita</option> \
+						");
+					}
+					else if (val == "energy") {
+						$("#subtopicSelect").html(" \
+							<option value='co2_emission' selected='selected'>CO2 emission (kt)</option> \
+							<option value='co2_tran'>CO2 emission from transportation (%)</option> \
+							<option value='co2_manf'>CO2 emission from manufacturing industries (%)</option> \
+							<option value='co2_elec'>CO2 emission electricity and heat production (%)</option> \
+							<option value='co2_bldg'>CO2 emission residental and commercial building (%)</option> \
+							<option value='alternative'>alternative energy usage rate (%)</option> \
+						");
+					}
+					else if (val == "population") {
+						$("#subtopicSelect").html(" \
+							<option value='population' selected='selected'>Population</option> \
+							<option value='migrant'>Migrant (people)</option> \
+							<option value='birth_rate'>Birth Rate (%)</option> \
+							<option value='death_rate'>Death Rate (%)</option> \
+							<option value='life_expectancy'>Life Expectancy (year)</option> \
+						");
+					}
+					/*
+					else if (val == "employment") {
+						$("#subtopicSelect").html(" \
+							<option value='lfpr' selected='selected'>Labor Force Participation Rate (%)</option> \
+							<option value='unemployment'>Unemployment (%)</option> \
+						");
+					}
+					*/
+					else if (val == "education") {
+						$("#subtopicSelect").html(" \
+							<option value='edu_expend' selected='selected'>Education expenditure (US$)</option> \
+							<option value='edu_bachelor'>Education attainment at least bachelor (%)</option> \
+							<option value='labor_force_advanced'>Labor force with advanced edu. (%)</option> \
+							<option value='labor_force_basic'>Labor force with basic edu. (%)</option> \
+						");
+					}
+				});
+			});
+		</script>
+		<script src="{{ url_for('static', filename='js/lineChart.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/barChart.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/pieChart.js') }}"></script>
+	</div>
+
+	<div id="div2">
+		<select name='country' id='countrySelect'>
+			<option value="USA">USA</option>
+			<option value="JPN">Japan</option>
+			<option value="DEU">Germany</option>
+			<option value="GBR">United Kindom</option>
+			<option value="AUS">Australia</option>
+		</select>
+
+		<script>
+			$(document).ready(function () {
+				$('#incomeSelect').change(function() {
+					var val = $(this).val();
+					if (val == "high-income") {
+						$("#countrySelect").html(" \
+							<option value='USA' selected>USA</option> \
+							<option value='JPN'>Japan</option> \
+							<option value='DEU'>Germany</option> \
+							<option value='GBR'>United Kindom</option> \
+							<option value='AUS'>Australia</option> \
+						");
+					}
+					else if (val == "middle-income") {
+						$("#countrySelect").html(" \
+							<option value='TUR' selected>Turkey</option> \
+							<option value='THA'>Thailand</option> \
+							<option value='CHN'>China</option> \
+							<option value='BRA'>Brazil</option> \
+							<option value='IND'>India</option> \
+						");
+					}
+					else if (val == "low-income") {
+						$("#countrySelect").html(" \
+							<option value='SOM' selected>Somalia</option> \
+							<option value='UGA'>Uganda</option> \
+							<option value='NPL'>Nepal</option> \
+							<option value='GIN'>Guinea</option> \
+							<option value='AFG'>Afghanistan</option> \
+						");
+					}
+				});
+			});
+		</script>
+		<script src="{{ url_for('static', filename='js/par_coor.js') }}"></script>
+	</div>
+
+	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>
