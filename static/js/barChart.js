@@ -1,10 +1,9 @@
 class BarChart {
 	constructor() {
 		this.input_data = null;
-		this.year_array = null;
 
-		this.svg_width = $(".div-barChart").width();
-		this.svg_height = $(".div-barChart").height();
+		this.svg_width = $(".div-barChart-pieChart").width();
+		this.svg_height = $(".div-barChart-pieChart").height();
 
 		this.color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -12,27 +11,26 @@ class BarChart {
 		this.yscale = null;
 	}
 
-	update_data(input_data, year_array) {
+	update_data(input_data) {
 		this.input_data = input_data;
-		this.year_array = year_array;
 	}
 
-	make_plot() {
-		var subsvg = svg_barChart.append("svg")
+	make_plot(cur_year) {
+		d3.select("#subsvg-barChart").remove();
+		var subsvg = svg_barChart_pieChart.append("svg")
 		  .attr("id", "subsvg-barChart")
 		  .attr("width", "100%")
 		  .attr("height", "100%");
 
-		this.updateBar(1960);
+		this.updateBar(cur_year);
 	}
 
 	updateBar (year) {
 		d3.selectAll(".xaxis").remove();
 		d3.selectAll(".yaxis").remove();
 		d3.select(".x-label").remove();
-		//d3.selectAll(".bar").remove();
 		d3.selectAll(".bar-label").remove();
-
+		
 		var _this = this;
 		var subsvg = d3.select("#subsvg-barChart");
 
@@ -53,7 +51,7 @@ class BarChart {
 		  .domain(yscaleKey)
 	  	  .range([0.0 * this.svg_height, this.svg_height*0.75])
 	      .padding(0.1);
-
+	    
 		subsvg.append("g")
 	  	  .attr("class", "yaxis")
 	  	  .attr("transform", "translate(" + (this.svg_width*0.1) + ",0)")
@@ -106,9 +104,15 @@ class BarChart {
 	  	  .data(this.input_data).enter()
 	  	  .append("text")
 	  	  .attr("class", "bar-label")
-	  	  .attr("text-anchor", "start")
+	  	  .attr("text-anchor", function (d) {
+	  	  	if (_this.xscale(d['data'][year-1960]) >= 0.9 * (_this.svg_width * 0.95))
+	  	  		return "end";
+	  	  	else "start";
+	  	  })
 	  	  .attr("x", function(d) {
-	  	  	return Math.min(0.85 * _this.svg_width, _this.xscale(d['data'][year - 1960]) + 0.01 * _this.svg_width);
+	  	  	if (_this.xscale(d['data'][year-1960]) >= 0.9 * (_this.svg_width * 0.95))
+	  	  		return _this.xscale(d['data'][year - 1960]) - 10;
+	  	  	else return Math.min(0.85 * _this.svg_width, _this.xscale(d['data'][year - 1960]) + 0.01 * _this.svg_width);
 	  	  })
 	  	  .attr("y", function(d) {return _this.yscale(d['country']) + _this.yscale.bandwidth()/2; })
 	  	  .text(function(d){
@@ -117,6 +121,21 @@ class BarChart {
 			else return "";
 	  	  })
 	  	  .attr("alignment-baseline", "ideographic")
+	  	  .style("font-size", function() {
+	  	  	if (_this.input_data.length >= 10) {
+		  		return 10;
+		  	}
+		  	else return 14;
+	  	  })
+	  	  .style("fill", function (d) {
+	  	  	if (_this.xscale(d['data'][year-1960]) >= 0.9 * (_this.svg_width * 0.95))
+	  	  		return "#ffffff";
+	  	  	else return "#000000";
+	  	  });
+	}
+
+	delete_plot() {
+		d3.select("#subsvg-barChart").remove();
 	}
 }
 

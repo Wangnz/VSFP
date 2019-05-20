@@ -12,7 +12,7 @@ class ScatterPlot {
 		this.input_data = input_data;
 	}
 
-	make_plot() {
+	make_plot(cur_year) {
 		var _this = this;
 		/*
 		d3.select(".xaxis-scatterPlot").remove();
@@ -20,6 +20,7 @@ class ScatterPlot {
 		d3.select(".xlabel-scatterPlot").remove();
 		*/
 		d3.select("#subsvg-scatterPlot").remove();
+		d3.select(".d3-tip").remove();
 		
 		var xmin = Infinity, xmax = 0;
 		var ymin = Infinity, ymax = 0;
@@ -73,11 +74,20 @@ class ScatterPlot {
 		  .style("text-anchor", "middle")
 		  .text("GDP per capita ($US)");
 
-		this.updateScatter(1960);
+		this.tip = d3.tip()
+		  .attr("class", "d3-tip")
+		  .html(function(d) {
+		  	return d['country'];
+		  });
+		
+		subsvg.call(this.tip);
+
+		this.updateScatter(cur_year);
 	}
 
 	updateScatter (year) {
 		d3.selectAll(".dot").remove();
+		d3.selectAll(".dot-label").remove();
 
 		var subsvg = d3.select("#subsvg-scatterPlot");
 		var _this = this;
@@ -88,8 +98,7 @@ class ScatterPlot {
 		  .data(this.input_data).enter()
 		  .append("circle")
 		  .attr("r", function(d) {
-		  	if (isNaN(norm_radius[d['country']])) return 0;
-		  	else return Math.sqrt(100*norm_radius[d['country']]);
+		  	return _this.getRadius(norm_radius[d['country']]);
 		  })
 		  .attr("class", "dot")
 		  .attr("cx", function(d) {
@@ -103,6 +112,39 @@ class ScatterPlot {
 		  	else return -100;
 		  })
 		  .style("fill", function(d) {return _this.color(d['country'])})	
+		  .style("opacity", 0.5)
+		  .on("mouseover", mouseOver)
+		  .on("mouseout", mouseOut);
+
+		subsvg.selectAll(".dot-label")
+		  .data(this.input_data).enter()
+		  .append("text")
+		  .attr("class", "dot-label")
+		  .attr("x", function(d) {
+		  	if (!isNaN(d['xaxis'][year - 1960]))
+		  		return _this.xscale(d['xaxis'][year - 1960]);
+		  	else return -100;
+		  })
+		  .attr("y", function(d) {
+		  	if (!isNaN(d['yaxis'][year - 1960]))
+		  		return _this.yscale(d['yaxis'][year - 1960])
+		  	else return -100;
+		  })
+		  .text(function(d) {
+		  	if (_this.getRadius(norm_radius[d['country']]) > 5)
+		  		return d['country']; 
+		  	else return "";
+		  })
+		  .style("font-size", 10);
+
+		function mouseOver(d) {
+			_this.tip.offset([-2, 0]).show(d);
+		}
+
+		function mouseOut(d) {
+			_this.tip.hide(d);
+		}
+
 	}
 
 	normalize(input_data, year) {
@@ -142,7 +184,7 @@ class ScatterPlot {
 			}
 		}
 		for (var country in norm_radius) {
-			norm_radius[country] += Math.abs(norm_min);
+			norm_radius[country] += (Math.abs(norm_min) + 1);
 		}
 
 		return norm_radius
@@ -156,6 +198,10 @@ class ScatterPlot {
         const squareDiffs = diffs.map((diff) => diff * diff);
         const avgSquareDiff = average(squareDiffs);
         return Math.sqrt(avgSquareDiff);
-};
+    }
 
+    getRadius(data) {
+		if (isNaN(data) || data == 1) return 0;
+		else return 2*Math.pow((data), 1.5);
+    }
 }

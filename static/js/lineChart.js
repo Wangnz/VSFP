@@ -136,7 +136,11 @@ class LineChart {
 
 		legend.append("rect")
 		  .attr("class", "legend_elem")
-		  .attr("x", function(d, i) {return column_start + (i+1) * column_width - 41;})
+		  .attr("x", function(d, i) {
+		  	if (_this.input_data.length >= 10) {
+		  		return column_start + (i+1) * column_width - 32;
+		  	}
+		  	else return column_start + (i+1) * column_width - 41;})
 		  .attr("y", 0)
 		  .attr("width", rect_size)
 		  .attr("height", rect_size*0.8)
@@ -149,7 +153,12 @@ class LineChart {
 		  .attr("alignment-baseline", "hanging")
 		  .style("text-anchor", "end")
 		  .text(function(d) {return d["country"]; })
-		  .attr("font-size", 12);
+		  .attr("font-size", function() {
+		  	if (_this.input_data.length >= 10) {
+		  		return 9;
+		  	}
+		  	else return 12;
+		  });
 
 		legend.append("text")
 		  .attr("class", "average legend_elem")
@@ -157,7 +166,12 @@ class LineChart {
 		  .attr("y", caption_y)
 		  .attr("alignment-baseline", "hanging")
 		  .style("text-anchor", "end")
-		  .attr("font-size", 14);
+		  .attr("font-size", function () {
+		  	if (_this.input_data.length >= 10) {
+		  		return 10;
+		  	}
+		  	else return 14;
+		  });
 		
 		legend.append("text")
 		  .attr("class", "max legend_elem")
@@ -165,7 +179,12 @@ class LineChart {
 		  .attr("y", caption_y + text_height)
 		  .attr("alignment-baseline", "hanging")
 		  .style("text-anchor", "end")
-		  .attr("font-size", 14);
+		  .attr("font-size", function() {
+		  	if (_this.input_data.length >= 10) {
+		  		return 10;
+		  	}
+		  	else return 14;
+		  });
 		
 		legend.append("text")
 		  .attr("class", "min legend_elem")
@@ -173,7 +192,12 @@ class LineChart {
 		  .attr("y", caption_y + 2 * text_height)
 		  .attr("alignment-baseline", "hanging")
 		  .style("text-anchor", "end")
-		  .attr("font-size", 14);
+		  .attr("font-size", function() {
+		  	if (_this.input_data.length >= 10) {
+		  		return 10;
+		  	}
+		  	else return 14;
+		  });
 
 		this.update_dashboard (1960, 2018);
 

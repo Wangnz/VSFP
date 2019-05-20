@@ -36,7 +36,7 @@ function keyMapping(topic) {
 	}
 }
 
-function showPlot (line_chart, par_coor_plot, bar_chart, scatterPlot) {
+function showPlot (line_chart, par_coor_plot, bar_chart, pie_chart, scatterPlot) {
 
 	year_array = [];
 	for (var i = 1960; i <= 2018; i++)
@@ -48,7 +48,7 @@ function showPlot (line_chart, par_coor_plot, bar_chart, scatterPlot) {
 	var status = 1;
 
 	var country_par = document.getElementById("countrySelect").value;
-
+	
 	// register topic selection
 	d3.select("#topicSelect").on("change", function() {
 		topic = d3.select("#topicSelect").property("value");
@@ -68,9 +68,15 @@ function showPlot (line_chart, par_coor_plot, bar_chart, scatterPlot) {
 	// register income selection
 	d3.select("#incomeSelect").on("change", function() {
 		income = d3.select("#incomeSelect").property("value");
-		if (income == "high-income" || income == "all") country_par = "USA";
-		else if (income == "middle-income") country_par = "TUR";
-		else if (income == "low-income") country_par = "SOM";
+		if (income == "high-income" || income == "all"){
+			country_par = "USA";
+		}
+		else if (income == "middle-income"){
+			country_par = "TUR";
+		}
+		else if (income == "low-income"){
+			country_par = "SOM";
+		}
 		updatePlot(topic, subtopic, income, status);
 	})
 
@@ -95,7 +101,6 @@ function showPlot (line_chart, par_coor_plot, bar_chart, scatterPlot) {
 		updateParColPlot(income, country_par, topic);
 	})
 
-	
 	updatePlot(topic, subtopic, income, status);
 	updateParColPlot(income, country_par, topic);
 
@@ -117,14 +122,17 @@ function showPlot (line_chart, par_coor_plot, bar_chart, scatterPlot) {
 		}
 
 		// plot bar chart/pie chart
+		var cur_year = slider.value();
 		switch (status) {
 			case 1:
-				bar_chart.update_data(array, year_array);
-				bar_chart.make_plot();
-				//makeBarChart(array, year_array);
+				bar_chart.update_data(array);
+				pie_chart.delete_plot();
+				bar_chart.make_plot(cur_year);
 				break;
 			case 2:
-				makePieChart(array, year_array);
+				pie_chart.update_data(array);
+				bar_chart.delete_plot();
+				pie_chart.make_plot(cur_year);
 				break;
 		}
 
@@ -148,7 +156,7 @@ function showPlot (line_chart, par_coor_plot, bar_chart, scatterPlot) {
 			}
 		}
 		scatterPlot.update_data(scatter_array);
-		scatterPlot.make_plot();
+		scatterPlot.make_plot(cur_year);
 	}
 
 	function updateParColPlot(income, country, feature_topic) {
@@ -182,9 +190,12 @@ function showPlot (line_chart, par_coor_plot, bar_chart, scatterPlot) {
 	}
 }
 
-function updateData(year, barChart, scatterPlot) {
+function updateData(year, barChart, pieChart, scatterPlot) {
 	scatterPlot.updateScatter(year);
-	barChart.updateBar(year);
+	if (document.getElementById("subsvg-barChart"))
+		barChart.updateBar(year);
+	else if (document.getElementById("subsvg-pieChart"))
+		pieChart.updatePie(year);
 }
 
 var margin = {top:50, right: 50, bottom: 100, left: 50};
@@ -208,13 +219,23 @@ var svg_parCoorPlot = svgContainer_parCoorPlot.append("svg")
   .attr("width", "100%")
   .attr("height", "100%");
 
-var svgContainer_barChart = d3.select(".div-barChart").attr("class", "div-barChart svg-container");
-var svg_barChart = svgContainer_barChart.append("svg")
+var svgContainer_barChart_pieChart = d3.select(".div-barChart-pieChart").attr("class", "div-barChart-pieChart svg-container");
+var svg_barChart_pieChart = svgContainer_barChart_pieChart.append("svg")
 .attr("preserveAspectRatio", "xMinYMin meet")
   //.attr("viewBox", "0 0" + " " + WIDTH + " " + (HEIGHT*2))
   .attr("class", "svg-content-responsive")
   .attr("width", "100%")
   .attr("height", "100%");
+
+/*
+var svgContainer_pieChart = d3.select(".div-barChart").attr("class", "div-pieChart svg-container");
+var svg_pieChart = svgContainer_pieChart.append("svg")
+.attr("preserveAspectRatio", "xMinYMin meet")
+  //.attr("viewBox", "0 0" + " " + WIDTH + " " + (HEIGHT*2))
+  .attr("class", "svg-content-responsive")
+  .attr("width", "100%")
+  .attr("height", "100%");
+*/
 
 var svgContainer_scatterPlot = d3.select(".div-scatterPlot").attr("class", "div-scatterPlot svg-container");
 var svg_scatterPlot = svgContainer_scatterPlot.append("svg")
@@ -239,19 +260,20 @@ var svg_height = $(".div-worldMap").height();
 let par_coor_plot = new ParCoorPlot();
 let line_chart = new LineChart();
 let bar_chart = new BarChart();
+let pie_chart = new PieChart();
 let scatterPlot = new ScatterPlot();
 
 par_coor_plot.link_to_lineChart(line_chart);
 line_chart.link_to_parCoorPlot(par_coor_plot);
-
-showPlot(line_chart, par_coor_plot, bar_chart, scatterPlot);
 
 var slider = d3.sliderBottom()
   .min(1960).max(2018)
   .width(svg_width * 0.8)
   .step(1)
   .default(1960)
-  .on("onchange", val => updateData(val, bar_chart, scatterPlot));
+  .on("onchange", val => updateData(val, bar_chart, pie_chart, scatterPlot));
+
+showPlot(line_chart, par_coor_plot, bar_chart, pie_chart, scatterPlot);
 
 var gSlider = svg_worldMap.append("g")
   .attr("class", "slider")
