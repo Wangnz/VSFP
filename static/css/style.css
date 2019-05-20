@@ -17,15 +17,30 @@ body {
 	text-align: center;
 }
 
+.div-top {
+	margin-top: 10px;
+	width: 100%;
+	border: 2px dashed #444;
+}
+
+.div-lineChart, .div-parCoorPlot {
+	width: calc(96% / 2);
+	display: inline-block;
+	border: 1px #FF0000 solid;
+	height: 100%;
+	margin: 4px;
+}
+
 .div-lineChart-plot {
-	height: 80%;
+	width: 100%;
+	height: 70%;
 }
 
 .div-dashboard {
 	position: absolute;
 	bottom: 0;
-	right: 15%;
-	left: 15%;
+	right: 1%;
+	left: 1%;
 	height: 20%;
 }
 
@@ -44,6 +59,24 @@ body {
 .svg-content-responsive {
 	display: inline-block;
 	position: absolute;
-	padding-top: 25px;
+	margin-top: 0px;
 	left: 0;
+}
+
+.div-bottom {
+	margin-top: 20px;
+	width: 100%;
+	border: 2px dashed #444;
+}
+
+.div-worldMap, .div-barChart, .div-scatterPlot {
+	width: calc(96% / 3);
+	display: inline-block;
+	border: 1px #FF0000 solid;
+	height: 100%;
+	margin: 4px;
+}
+
+.bar-label text {
+	font-size: 12px;
 }

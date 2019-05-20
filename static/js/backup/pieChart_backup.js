@@ -1,37 +1,27 @@
 function makePieChart(input_data, year_array) {
 
-	d3.select("#subsvg-barChart").remove();
+	d3.select("#subsvg").remove();
 
-	var svg_width = $(".div-barChart").width();
-	var svg_height = $(".div-barChart").height();
-	
-	var subsvg = svg_barChart.append("svg")
-	  .attr("id", "subsvg-barChart")
-	  .attr("width", "100%")
-	  .attr("height", "100%");
-
-	/*
 	var subsvg = svg.append("svg")
 	  .attr("id", "subsvg")
       .attr("width", "100%")
   	  .attr("height", "100%");
-	*/
 
 	var slider = d3.sliderBottom()
 	  .min(1960).max(2018)
-	  .width(svg_width * 0.8)
+	  .width(WIDTH * 0.8)
 	  .step(1)
 	  .default(1960)
 	  .on("onchange", val => updatePie(val));
 
 	var gSlider = subsvg.append("g")
-	  .attr("class", "slider")
-	  .attr("transform", "translate(" + (0.1 * svg_width) + "," + (0.8 * svg_height) + ")");
+	  .attr("transform", "translate(" + (WIDTH*0.1) + "," + (HEIGHT+50) + ")");
 	gSlider.call(slider);
 
 	var color = d3.scaleOrdinal(d3.schemeCategory10)
-	
-	var radius = Math.min(svg_height, svg_width) * 0.4;
+	  .domain(["full", "random", "strat"]);
+
+	var radius = Math.min(WIDTH, HEIGHT) * 0.4;
 	
 	var arc = d3.arc().outerRadius(radius*0.8).innerRadius(radius * 0.6);
 	var labelArc = d3.arc().outerRadius(radius * 0.9).innerRadius(radius * 0.9);
@@ -54,7 +44,7 @@ function makePieChart(input_data, year_array) {
 
 	  	var pieFrame = subsvg.append("g")
 		  .attr("class", "pie")
-		  .attr("transform", "translate(" + (svg_width / 2) + "," + (svg_height * 0.4) + ")");
+		  .attr("transform", "translate(" + (WIDTH / 2) + "," + (50 + HEIGHT / 2) + ")");
 
 		var slice = pieFrame.selectAll(".slice")
 		  .data(pie(input_data)).enter()
@@ -75,15 +65,12 @@ function makePieChart(input_data, year_array) {
 		  .attr("transform", function(d, i) {
 		  	var pos = labelArc.centroid(d);
 		  	pos[0] = radius * 0.95 * (d.startAngle + (d.endAngle - d.startAngle) / 2 < Math.PI ? 1 : -1) + 30;
-		  	pos[0] -= i * 10;
+		  	pos[0] -= i * 30;
 		  	return "translate(" + (pos) + ")";
 		  })
 		  .attr("dy", "0.35em")
 		  .style("text-anchor", function(d) {return (d.startAngle + (d.endAngle - d.startAngle) / 2 < Math.PI ? "start" : "end"); })
-		  .text(function(d) {
-		  	if (!isNaN(d.data['data'][year-1960]))
-		  		return d.data['country'] + " (" + (d.data['data'][year-1960] *100 / total).toFixed(1) + "%)";
-		  });
+		  .text(function(d) {return d.data['country'] + " (" + (d.data['data'][year-1960] *100 / total).toFixed(1) + "%)"; });
 
 		var lineFrame = pieFrame.append("g")
 		  .attr("class", "lines");
@@ -92,13 +79,10 @@ function makePieChart(input_data, year_array) {
 		  .data(pie(input_data)).enter()
 		  .append("polyline")
 		  .attr("points", function(d, i) {
-		  		if (d.value == 0) return [0, 0];
-		  		if (d.startAngle != 0 || d.endAngle != 0){
-			  		var pos = labelArc.centroid(d);
-			  		pos[0] = radius * 0.95 * (d.startAngle + (d.endAngle - d.startAngle) / 2 < Math.PI ? 1 : -1) + 30;
-			  		pos[0] -= i * 10;
-			  		return [arc.centroid(d), labelArc.centroid(d), pos];
-			  	}
+		  		var pos = labelArc.centroid(d);
+		  		pos[0] = radius * 0.95 * (d.startAngle + (d.endAngle - d.startAngle) / 2 < Math.PI ? 1 : -1) + 30;
+		  		pos[0] -= i * 30;
+		  		return [arc.centroid(d), labelArc.centroid(d), pos];
 		  })
 		  .attr("fill", "none")
 		  .attr("stroke", "black")

@@ -21,14 +21,11 @@ class LineChart {
 
 	link_to_parCoorPlot(parCoorPlot_obj) {
 		this.parCoorPlot = parCoorPlot_obj;
-		console.log("link to parallel coordinate plot");
 	}
 
 	make_plot() {
-
-		d3.select("#subsvg").remove();
+		d3.select("#subsvg-lineChart-plot").remove();
 		var _this = this;
-
 		var ymin = Infinity, ymax = 0; 
 		
 		for (var i = 0; i < this.input_data.length; i++) {
@@ -38,39 +35,48 @@ class LineChart {
 			}
 		}
 
-		// var subsvg = svg.append("svg")
-		var subsvg = d3.select(".div-lineChart-plot")
+		var svg_width = $(".div-lineChart-plot").width();
+		var svg_height = $(".div-lineChart-plot").height();
+
+		var subsvg = svg_lineChart.append("svg")
+		  .attr("id", "subsvg-lineChart-plot")
+		  .attr("width", "100%")
+		  .attr("height", "100%");
+
+		/*
+		d3.select(".div-lineChart-plot")
 		  .append("svg")
 		  .attr("preserveAspectRatio", "xMinYMin meet")
 		  .attr("viewBox", "0 0" + " " + WIDTH + " " + (HEIGHT*2))
 		  .attr("class", "svg-content-responsive")
-		  .attr("id", "subsvg")
+		  .attr("id", "subsvg-lineChart")
+		*/
 		  
 		var x_domain = d3.extent(this.year_array, function(d) {return d; });
 		this.xscale = d3.scaleLinear()
 		  .domain(x_domain)
-		  .range([0.1*WIDTH, 0.95*WIDTH]);
+		  .range([0.1*svg_width, 0.9*svg_width]);
 
 		this.yscale = d3.scaleLinear()
 	 	  .domain([ymin, ymax])
-		  .range([HEIGHT, 0]);
+		  .range([svg_height, 0]);
   
 		subsvg.append("text")
 		  .attr("transform", "rotate(-90)")
-		  .attr("y", margin.left / 2)
-		  .attr("x", 0 - (HEIGHT/2))
+		  .attr("y", 0.05 * svg_width)
+		  .attr("x", -0.5 * svg_height)
 		  .style("text-anchor", "middle")
 		  .text(d3.select("#subtopicSelect option:checked").text())
 		  .attr("font-size", 14)
 
 		subsvg.append("g")
-		  .attr("class", "xaxis")
-		  .attr("transform", "translate(0,"+(HEIGHT)+")")
+		  .attr("class", "xaxis-lineChart")
+		  .attr("transform", "translate(0,"+(svg_height)+")")
 		  .call(d3.axisBottom(this.xscale));
 
 		subsvg.append("g")
-		  .attr("class", "yaxis")
-		  .attr("transform", "translate(" + (0.1*WIDTH) + ", 0)")
+		  .attr("class", "yaxis-lineChart")
+		  .attr("transform", "translate(" + (0.1 * svg_width) + ", 0)")
 		  .call(d3.axisLeft(this.yscale).tickFormat(d3.format(".0s")));
 
 		this.line = d3.line()
@@ -95,12 +101,18 @@ class LineChart {
 		// Legend
 		var rect_size = 13, text_height = 14;
 		var caption_x = 0, caption_y = rect_size;
+		var column_start = 50;
+		var column_width = (svg_width * 0.9 - column_start) / Object.keys(this.input_data).length;
+		
+		/*
 		var rect_x = 50, rect_y = 0;
 		var country_x = rect_x + rect_size, country_y = 0;
 		var coutry_width = 40;
 		var rect_country_width = 70;
 		var value_x = rect_x + rect_size + 28;
 		var value_y = caption_y;
+		*/
+		d3.select(".dashboard_svg").remove();
 
 		var dashboard_svg = d3.select(".div-dashboard")
 		  .append("svg")
@@ -120,46 +132,48 @@ class LineChart {
 		  .data(this.input_data).enter()
 		  .append("g")
 		  .attr("class", "legend")
-		  .attr("transform", function(d, i) {
-		  	return "translate(" + (i * 20) + ",0)";
-		});
+		  .attr("x", (column_start + i * column_width))
 
 		legend.append("rect")
 		  .attr("class", "legend_elem")
-		  .attr("x", function(d, i) {return rect_x + i * rect_country_width;})
-		  .attr("y", rect_y)
+		  .attr("x", function(d, i) {return column_start + (i+1) * column_width - 41;})
+		  .attr("y", 0)
 		  .attr("width", rect_size)
-		  .attr("height", rect_size)
+		  .attr("height", rect_size*0.8)
 		  .style("fill", function(d, i) {return _this.color(i); });
 
 		legend.append("text")
 		  .attr("class", "legend_elem")
-		  .attr("x", function(d, i) {return country_x + i * rect_country_width;})
-		  .attr("y", country_y)
+		  .attr("x", function(d, i) {return column_start + (i+1) * column_width;})
+		  .attr("y", 0)
 		  .attr("alignment-baseline", "hanging")
-		  .style("text-anchor", "start")
-		  .text(function(d) {return d["country"]; });
+		  .style("text-anchor", "end")
+		  .text(function(d) {return d["country"]; })
+		  .attr("font-size", 12);
 
 		legend.append("text")
 		  .attr("class", "average legend_elem")
-		  .attr("x", function(d, i) {return value_x + i * rect_country_width})
-		  .attr("y", value_y)
+		  .attr("x", function(d, i) {return column_start + (i+1) * column_width})
+		  .attr("y", caption_y)
 		  .attr("alignment-baseline", "hanging")
-		  .style("text-anchor", "end");
+		  .style("text-anchor", "end")
+		  .attr("font-size", 14);
 		
 		legend.append("text")
 		  .attr("class", "max legend_elem")
-		  .attr("x", function(d, i) {return value_x + i * rect_country_width})
-		  .attr("y", value_y + text_height)
+		  .attr("x", function(d, i) {return column_start + (i+1) * column_width})
+		  .attr("y", caption_y + text_height)
 		  .attr("alignment-baseline", "hanging")
-		  .style("text-anchor", "end");
+		  .style("text-anchor", "end")
+		  .attr("font-size", 14);
 		
 		legend.append("text")
 		  .attr("class", "min legend_elem")
-		  .attr("x", function(d, i) {return value_x + i * rect_country_width})
-		  .attr("y", value_y + 2 * text_height)
+		  .attr("x", function(d, i) {return column_start + (i+1) * column_width})
+		  .attr("y", caption_y + 2 * text_height)
 		  .attr("alignment-baseline", "hanging")
-		  .style("text-anchor", "end");
+		  .style("text-anchor", "end")
+		  .attr("font-size", 14);
 
 		this.update_dashboard (1960, 2018);
 
@@ -167,14 +181,16 @@ class LineChart {
 	}
 
 	create_brush () {
+		var svg_width = $(".div-lineChart-plot").width();
+		var svg_height = $(".div-lineChart-plot").height();
 
 		this.brush = d3.brushX()
-		  .extent([[0.1 * WIDTH, 0], [0.9 * WIDTH, HEIGHT]])
+		  .extent([[0.1 * svg_width, 0], [0.9 * svg_width, svg_height]])
 		  .on("start", brush_start)
 		  .on("brush", brush_move)
 		  .on("end", brush_end);
 
-		var subsvg = d3.select("#subsvg");
+		var subsvg = d3.select("#subsvg-lineChart-plot");
 
 		subsvg.append("g")
 		  .attr("class", "brush")
@@ -225,6 +241,7 @@ class LineChart {
 
 		function brush_move() {
 			var line_svg = d3.selectAll(".line_svg");
+			var svg_width = $(".div-lineChart-plot").width();
 			
 			var extent = d3.event.selection.map(_this.xscale.invert);
 			var left_bound = Math.round(d3.min(extent));
@@ -248,7 +265,7 @@ class LineChart {
 			  .attr("stroke-width", "1")
 			  .attr("stroke", function(d, i) {return _this.color(i); })
 			  .attr("fill", "none")
-			  .attr("transform", "translate(" + (_this.xscale(left_bound) - 0.1 * WIDTH) + ", 0)");
+			  .attr("transform", "translate(" + (_this.xscale(left_bound) - 0.1 * svg_width) + ", 0)");
 			left_bound = _this.prev_left_bound;
 			right_bound = _this.prev_right_bound;
 		}

@@ -31,10 +31,10 @@ class ParCoorPlot {
 
 	make_plot() {
 		// makeParCoorPlot(this.input_data, this.income, this.country, this.features);
-		d3.select("#subsvg2").remove();
+		d3.select("#subsvg-parCoorPlot").remove();
 
-		var subsvg = svg2.append("svg")
-		  .attr("id", "subsvg2")
+		var subsvg = svg_parCoorPlot.append("svg")
+		  .attr("id", "subsvg-parCoorPlot")
 		  .attr("width", "100%")
 		  .attr("height", "100%");
 
@@ -124,7 +124,7 @@ class ParCoorPlot {
 	}
 
 	linking(start_year, end_year) {
-		var subsvg = d3.select("#subsvg2");
+		var subsvg = d3.select("#subsvg-parCoorPlot");
 
 		var _this = this;
 		function path(d) {
@@ -164,7 +164,7 @@ class ParCoorPlot {
 	}
 
 	cancel_linking () {
-		var subsvg = d3.select("#subsvg2");
+		var subsvg = d3.select("#subsvg-parCoorPlot");
 
 		subsvg.selectAll(".brush_path").remove();
 		subsvg.selectAll(".path").style("opacity", 0.4);

@@ -32,12 +32,8 @@
 				<option value="high-income">High income</option>
 				<option value="middle-income">Middle income</option>
 				<option value="low-income">Low income</option>
+				<option value="all">All</option>
 			</select>
-
-			<input class="plotType" name="typeButton", type="button" value="Line Chart" disabled>
-			<input class="plotType" name="typeButton", type="button" value="Bar Chart">
-			<input class="plotType" name="typeButton", type="button" value="Pie Chart">
-
 			<script>
 				$(document).ready(function () {
 					$('#topicSelect').change(function() {
@@ -127,6 +123,25 @@
 								<option value='AFG'>Afghanistan</option> \
 							");
 						}
+						else if (val == "all") {
+							$("#countrySelect").html(" \
+								<option value='USA' selected>USA</option> \
+								<option value='JPN'>Japan</option> \
+								<option value='DEU'>Germany</option> \
+								<option value='GBR'>United Kindom</option> \
+								<option value='AUS'>Australia</option> \
+								<option value='TUR' selected>Turkey</option> \
+								<option value='THA'>Thailand</option> \
+								<option value='CHN'>China</option> \
+								<option value='BRA'>Brazil</option> \
+								<option value='IND'>India</option> \
+								<option value='SOM' selected>Somalia</option> \
+								<option value='UGA'>Uganda</option> \
+								<option value='NPL'>Nepal</option> \
+								<option value='GIN'>Guinea</option> \
+								<option value='AFG'>Afghanistan</option> \
+							");
+						}
 					});
 				});
 			</script>
@@ -137,8 +152,6 @@
 		<div class="div-lineChart">
 			<div class="div-lineChart-plot">
 				<script src="{{ url_for('static', filename='js/lineChart.js') }}"></script>
-				<script src="{{ url_for('static', filename='js/barChart.js') }}"></script>
-				<script src="{{ url_for('static', filename='js/pieChart.js') }}"></script>
 			</div>
 			<div class="div-dashboard"></div>
 		</div>
@@ -149,10 +162,20 @@
 	</div>
 
 	<div class="div-bottom">
+		<div class="div-scatterPlot">
+			<script src="{{ url_for('static', filename='js/scatterPlot.js') }}"></script>
+		</div>
 		<div class="div-worldMap"></div>
-		<div class="div-barChart"></div>
-		<div class="div-scatterPlot"></div>
+		<div class="div-barChart">
+			<script src="{{ url_for('static', filename='js/barChart.js') }}"></script>
+			<script src="{{ url_for('static', filename='js/pieChart.js') }}"></script>
+			<div class="div-plotType">
+				<input class="plotType" name="typeButton", type="button" value="Bar Chart" disabled>
+				<input class="plotType" name="typeButton", type="button" value="Pie Chart">
+			</div>
+		</div>
 	</div>
+
 	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </body>
