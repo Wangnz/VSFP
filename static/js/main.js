@@ -1,10 +1,8 @@
-console.log(data);
-
 function keyMapping(topic) {
 	if (topic == "economy") {
 		return {
-			"gdp": "NY.GDP.PCAP.CD",
-			"gdp_per_capita": "NY.GDP.MKTP.CD",
+			"gdp_per_capita": "NY.GDP.PCAP.CD",
+			"gdp": "NY.GDP.MKTP.CD",
 			"gni": "NY.GNP.PCAP.CD"};
 	}
 	else if (topic == "population") {
@@ -48,7 +46,7 @@ function showPlot (line_chart, par_coor_plot, bar_chart, pie_chart, scatterPlot)
 	var status = 1;
 
 	var country_par = document.getElementById("countrySelect").value;
-	
+
 	// register topic selection
 	d3.select("#topicSelect").on("change", function() {
 		topic = d3.select("#topicSelect").property("value");
@@ -105,7 +103,6 @@ function showPlot (line_chart, par_coor_plot, bar_chart, pie_chart, scatterPlot)
 	updateParColPlot(income, country_par, topic);
 
 	function updatePlot(topic, subtopic, income, status) {
-
 		var key = keyMapping(topic);
 		var array = [];
 

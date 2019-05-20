@@ -67,7 +67,7 @@ class PieChart {
 		}
 		
 		slice.append("text")
-		  .filter(function(d) {console.log(d.startAngle, d.endAngle); return (d.endAngle - d.startAngle) * 180 / Math.PI >= 10; })
+		  .filter(function(d) {return (d.endAngle - d.startAngle) * 180 / Math.PI >= 10; })
 		  .attr("transform", function(d, i) {
 		  	var pos = _this.labelArc.centroid(d);
 		  	pos[0] = _this.radius * 0.95 * (d.startAngle + (d.endAngle - d.startAngle) / 2 < Math.PI ? 1 : -1);
@@ -88,7 +88,7 @@ class PieChart {
 
 		var polyLine = lineFrame.selectAll("polyline")
 		  .data(pie(this.input_data)).enter()
-		  .filter(function(d) {console.log(d.startAngle, d.endAngle); return (d.endAngle - d.startAngle) * 180 / Math.PI >= 10; })
+		  .filter(function(d) {return (d.endAngle - d.startAngle) * 180 / Math.PI >= 10; })
 		  .append("polyline")
 		  .attr("points", function(d, i) {
 		  		if (d.value == 0) return [0, 0];

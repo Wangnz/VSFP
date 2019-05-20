@@ -29,7 +29,7 @@ class LineChart {
 		var ymin = Infinity, ymax = 0; 
 		
 		for (var i = 0; i < this.input_data.length; i++) {
-			if (!isNaN(d3.min(this.input_data[i]['data']))){
+			if (this.input_data[i]['data'] && !isNaN(d3.min(this.input_data[i]['data']))){
 				ymin = Math.min(ymin, d3.min(this.input_data[i]['data']));
 				ymax = Math.max(ymax, d3.max(this.input_data[i]['data']));
 			}
@@ -63,11 +63,14 @@ class LineChart {
   
 		subsvg.append("text")
 		  .attr("transform", "rotate(-90)")
-		  .attr("y", 0.05 * svg_width)
-		  .attr("x", -0.5 * svg_height)
+		  .attr("y", 0.025 * svg_width)
+		  .attr("x", -0.6 * svg_height)
 		  .style("text-anchor", "middle")
 		  .text(d3.select("#subtopicSelect option:checked").text())
-		  .attr("font-size", 14)
+		  .attr("font-size", function() {
+		  	if (d3.select("#subtopicSelect option:checked").text().length > 40) return 10;
+		  	else return 14;
+		  })
 
 		subsvg.append("g")
 		  .attr("class", "xaxis-lineChart")
@@ -94,7 +97,7 @@ class LineChart {
 		  .attr("class", "line")
 		  .attr("d", this.line)
 		  .attr("stroke-width", "1")
-		  .attr("stroke", function(d, i) {return _this.color(i); })
+		  .attr("stroke", function(d, i) {return _this.color(_this.input_data[i]['country']); })
 		  .attr("fill", "none");
 
 		
@@ -144,7 +147,7 @@ class LineChart {
 		  .attr("y", 0)
 		  .attr("width", rect_size)
 		  .attr("height", rect_size*0.8)
-		  .style("fill", function(d, i) {return _this.color(i); });
+		  .style("fill", function(d, i) {return _this.color(_this.input_data[i]['country']); });
 
 		legend.append("text")
 		  .attr("class", "legend_elem")
@@ -287,7 +290,7 @@ class LineChart {
 			  .attr("class", "brush_line")
 			  .attr("d", _this.line)
 			  .attr("stroke-width", "1")
-			  .attr("stroke", function(d, i) {return _this.color(i); })
+			  .attr("stroke", function(d, i) {return _this.color(_this.input_data[i]['country']); })
 			  .attr("fill", "none")
 			  .attr("transform", "translate(" + (_this.xscale(left_bound) - 0.1 * svg_width) + ", 0)");
 			left_bound = _this.prev_left_bound;

@@ -112,10 +112,10 @@ class ScatterPlot {
 		  	else return -100;
 		  })
 		  .style("fill", function(d) {return _this.color(d['country'])})	
-		  .style("opacity", 0.5)
-		  .on("mouseover", mouseOver)
-		  .on("mouseout", mouseOut);
-
+		  .style("opacity", 0.7)
+		  .on("mouseout", mouseOut)
+		  .on("mouseover", mouseOver);
+		  
 		subsvg.selectAll(".dot-label")
 		  .data(this.input_data).enter()
 		  .append("text")
@@ -137,11 +137,27 @@ class ScatterPlot {
 		  })
 		  .style("font-size", 10);
 
+		var initial_r;
 		function mouseOver(d) {
+			var __this = this;
+			d3.selectAll(".dot")
+			  .style("opacity", 0.2);
+
+			initial_r = +d3.select(this).attr("r");
+			d3.select(this)
+			  .attr("r", initial_r * 1.5)
+			  .style("opacity", 0.7);
+
 			_this.tip.offset([-2, 0]).show(d);
 		}
 
 		function mouseOut(d) {
+			d3.selectAll(".dot")
+			  .style("opacity", 0.7);
+
+			d3.select(this)
+			  .attr("r", initial_r);
+
 			_this.tip.hide(d);
 		}
 

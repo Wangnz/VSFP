@@ -18,15 +18,14 @@
 	<div class="menu_bar">
 		<div class="menu_bar-left">
 			<select name="topic" id="topicSelect">
-				<option value="economy">economy</option>
-				<option value="energy">energy</option>
+				<option value="economy">Economy</option>>
 				<option value="population">population</option>
+				<option value="energy">energy</option>
 				<option value="education">education</option>
 			</select>
 
 			<select name='subtopic' id='subtopicSelect'>
-				<option value="gdp">GDP per capita</option>
-				<option value="gni">GNI per capita</option>
+				<option value='gdp' selected='selected'>GDP ($US)</option> 
 			</select>
 
 			<select name='incomeType' id='incomeSelect'>
@@ -41,7 +40,7 @@
 						var val = $(this).val();
 						if (val == "economy") {
 							$("#subtopicSelect").html(" \
-								<option value='gdp' selected='selected'>GDP per capita</option> \
+								<option value='gdp' selected='selected'>GDP</option> \
 								<option value='gni'>GNI per capita</option> \
 							");
 						}
@@ -74,10 +73,11 @@
 						*/
 						else if (val == "education") {
 							$("#subtopicSelect").html(" \
-								<option value='edu_expend' selected='selected'>Education expenditure (US$)</option> \
-								<option value='edu_bachelor'>Education attainment at least bachelor (%)</option> \
-								<option value='labor_force_advanced'>Labor force with advanced edu. (%)</option> \
-								<option value='labor_force_basic'>Labor force with basic edu. (%)</option> \
+								<option value='gov_expenditure' selected='selected'>Government expenditure on edu. (US$)</option> \
+								<option value='enroll_preprimary'>School enrollment, preprimary (%)</option> \
+								<option value='enroll_primary'>School enrollment, primary (%)</option> \
+								<option value='enroll_secondary'>School enrollment, secondary (%)</option> \
+								<option value='enroll_tertiary'>School enrollment, tertiary (%)</option> \
 							");
 						}
 					});
