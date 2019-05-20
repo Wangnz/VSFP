@@ -95,11 +95,10 @@ class BarChart {
 		  .attr("y", function (d) {return _this.yscale(d['country']);})
 	  	  .attr("fill", function(d, i) {return _this.color(d['country']); })
 	  	  .attr("width", function(d) {
-	  	  	var data = d['data'][year-1960]; 
 	  	  	if (isNaN(d['data'][year-1960]))
 	  	  		return 0;
 	  	  	else
-	  	  		return _this.xscale(d['data'][year-1960]); })
+	  	  		return _this.xscale(d['data'][year-1960]) - 0.1 * _this.svg_width; })
 	  	  .attr("height", this.yscale.bandwidth());
 
 	  	subsvg.selectAll(".bar-label")
@@ -108,7 +107,9 @@ class BarChart {
 	  	  .append("text")
 	  	  .attr("class", "bar-label")
 	  	  .attr("text-anchor", "start")
-	  	  .attr("x", function(d) {return _this.xscale(d['data'][year - 1960]) + 0.11 * _this.svg_width; })
+	  	  .attr("x", function(d) {
+	  	  	return Math.min(0.85 * _this.svg_width, _this.xscale(d['data'][year - 1960]) + 0.01 * _this.svg_width);
+	  	  })
 	  	  .attr("y", function(d) {return _this.yscale(d['country']) + _this.yscale.bandwidth()/2; })
 	  	  .text(function(d){
 	  	  	if (!isNaN(d['data'][year-1960]))

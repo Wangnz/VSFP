@@ -20,13 +20,12 @@ body {
 .div-top {
 	margin-top: 10px;
 	width: 100%;
-	border: 2px dashed #444;
 }
 
 .div-lineChart, .div-parCoorPlot {
 	width: calc(96% / 2);
 	display: inline-block;
-	border: 1px #FF0000 solid;
+	border: 1px #cccccc solid;
 	height: 100%;
 	margin: 4px;
 }
@@ -45,7 +44,6 @@ body {
 }
 
 .svg-container {
-	border: 1px #cccccc solid;
 	display: inline-block;
 	position: relative;
 	width: 48%;
@@ -66,13 +64,12 @@ body {
 .div-bottom {
 	margin-top: 20px;
 	width: 100%;
-	border: 2px dashed #444;
 }
 
 .div-worldMap, .div-barChart, .div-scatterPlot {
 	width: calc(96% / 3);
 	display: inline-block;
-	border: 1px #FF0000 solid;
+	border: 1px #cccccc solid;
 	height: 100%;
 	margin: 4px;
 }
